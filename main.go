@@ -28,17 +28,17 @@ func pwd(p string) string {
     return strings.Replace(dir, "\\", "/", -1)
 }
 
-func (f *files) Files(fileName string) error {
-    filepath.Walk(pwd(fileName), func(path string, info os.FileInfo, err error) error {
+func (f *files) Files(fileName string) (e error) {
+    e = filepath.Walk(pwd(fileName), func(path string, info os.FileInfo, err error) error {
         dir, name := filepath.Split(path)
         *f = append(*f, file{
             path: path,
             dir: dir,
             name: name,
         })
-        return nil
+        return err
     })
-    return nil
+    return e
 }
 
 func (arr array) getArgv(index int) string {
@@ -62,16 +62,16 @@ func (f files) Av(match string) (files, error) {
     return tempF, nil
 }
 
-func Av(origin, target, regex string) error {
+func Av(origin, target, regex string) (err error) {
     f := files{}
-    err := f.Files(origin)
+    err = f.Files(origin)
     if err != nil {
-        return errors.New("Files error")
+        return
     }
     if regex != "" {
         f, err = f.Av(regex)
         if err != nil {
-            return errors.New("Av error")
+            return
         }
     }
     for _, i := range f {
