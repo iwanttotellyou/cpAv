@@ -8,7 +8,6 @@ import (
     "os"
     . "cpAv/file"
     "regexp"
-    "errors"
 )
 
 type file struct {
@@ -51,7 +50,7 @@ func (arr array) getArgv(index int) string {
 func (f files) Av(match string) (files, error) {
     reg, err := regexp.Compile(match)
     if err != nil {
-        return nil, errors.New("regex syntax is wrong")
+        panic("regex syntax is wrong")
     }
     tempF := files{}
     for _, i := range f {
